@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "openai": "^4.76.3",
+    "telegraf": "^4.16.3"
+  }
+}

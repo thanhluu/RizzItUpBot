@@ -12,6 +12,18 @@ const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 // Session store to keep track of user steps
 const sessions = {};
 
+// List of random responses for free chat
+const randomResponses = [
+  "I'm here to help you create the perfect bio! 😎 Tell me more!",
+  "Are you ready to spice things up with some rizz? 😏",
+  "Feeling lucky? I’ve got pickup lines waiting for you! 😘",
+  "Hey there! Ready to create some magic with words? ✨",
+  "Need help? I’m always here to make things interesting. 😜",
+  "Just say the word, and I’ll generate something awesome! 🚀",
+  "Let’s make your online dating profile stand out! 📸",
+  "You can talk to me anytime! I love chatting about bios, rizz, and more. 💬"
+];
+
 // Main Menu (Inline keyboard with callback data)
 const mainMenu = {
   reply_markup: {
@@ -33,7 +45,7 @@ bot.start((ctx) => {
 
 // Handle /bio command - Generate bio for dating apps
 const handleBio = async (ctx) => {
-  ctx.reply('Let’s create your perfect dating bio! 🙌\nFirst, which platform are you using? (Tinder, Bumble, OkCupid, etc.)');
+  ctx.reply('Let’s create your perfect dating bio! 🙌\nFirst, which platform are you using? (Tinder, Bumble, OkCupid, etc.)\nYou can type "skip" to skip this question.');
   sessions[ctx.chat.id] = { step: 'bio' };
 };
 
@@ -118,27 +130,62 @@ bot.on('message', async (ctx) => {
   const userInput = ctx.message.text.trim();
   const chatId = ctx.chat.id;
 
+  // Check if session exists for chatId and initialize if necessary
+  if (!sessions[chatId]) {
+    sessions[chatId] = {};
+  }
+
   if (userInput === '/start' || userInput === '/bio' || userInput === '/rizz' || userInput === '/pickup') return;
 
   // Handle bio-related input
   if (sessions[chatId].step === 'bio') {
     if (!sessions[chatId].platform) {
-      sessions[chatId].platform = userInput;
-      ctx.reply('Perfect! Now, tell me about your personality (e.g., fun-loving, adventurous, etc.)');
+      if (userInput.toLowerCase() === 'skip') {
+        sessions[chatId].platform = 'Unknown';
+        ctx.reply('Skipping the platform question! Now, tell me about your personality (e.g., fun-loving, adventurous, etc.)');
+      } else {
+        sessions[chatId].platform = userInput;
+        ctx.reply('Perfect! Now, tell me about your personality (e.g., fun-loving, adventurous, etc.)');
+      }
     } else if (!sessions[chatId].personality) {
-      sessions[chatId].personality = userInput;
-      ctx.reply('Nice! What are some of your hobbies?');
+      if (userInput.toLowerCase() === 'skip') {
+        sessions[chatId].personality = 'No preference';
+        ctx.reply('Skipping the personality question! What are some of your hobbies?');
+      } else {
+        sessions[chatId].personality = userInput;
+        ctx.reply('Nice! What are some of your hobbies?');
+      }
     } else if (!sessions[chatId].hobbies) {
-      sessions[chatId].hobbies = userInput;
-      ctx.reply('Great! How would you describe your sense of humor?');
+      if (userInput.toLowerCase() === 'skip') {
+        sessions[chatId].hobbies = 'None specified';
+        ctx.reply('Skipping the hobbies question! How would you describe your sense of humor?');
+      } else {
+        sessions[chatId].hobbies = userInput;
+        ctx.reply('Great! How would you describe your sense of humor?');
+      }
     } else if (!sessions[chatId].humor) {
-      sessions[chatId].humor = userInput;
-      ctx.reply('Got it! What are your main interests?');
+      if (userInput.toLowerCase() === 'skip') {
+        sessions[chatId].humor = 'No preference';
+        ctx.reply('Skipping the humor question! What are your main interests?');
+      } else {
+        sessions[chatId].humor = userInput;
+        ctx.reply('Got it! What are your main interests?');
+      }
     } else if (!sessions[chatId].interests) {
-      sessions[chatId].interests = userInput;
-      ctx.reply('Awesome! Lastly, what type of relationship are you looking for?');
+      if (userInput.toLowerCase() === 'skip') {
+        sessions[chatId].interests = 'None specified';
+        ctx.reply('Skipping the interests question! Lastly, what type of relationship are you looking for?');
+      } else {
+        sessions[chatId].interests = userInput;
+        ctx.reply('Awesome! Lastly, what type of relationship are you looking for?');
+      }
     } else if (!sessions[chatId].relationshipType) {
-      sessions[chatId].relationshipType = userInput;
+      if (userInput.toLowerCase() === 'skip') {
+        sessions[chatId].relationshipType = 'Any';
+        ctx.reply('Skipping the relationship type question! Let me generate your bio now.');
+      } else {
+        sessions[chatId].relationshipType = userInput;
+      }
 
       // Generate bio after collecting all details
       const generatedBio = await generateBio(
@@ -150,7 +197,16 @@ bot.on('message', async (ctx) => {
         sessions[chatId].relationshipType
       );
       
-      ctx.reply(`Here’s your personalized bio 📝:\n\n${generatedBio}`, mainMenu);
+      ctx.reply(`Here’s your personalized bio 📝:\n\n${generatedBio}`, {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '🔄 Generate Another Bio', callback_data: 'bio' }],
+          ],
+        },
+      });
+
+      // Save the generated bio to session
+      sessions[chatId].generatedBio = generatedBio;
 
       // Clear session after bio generation
       delete sessions[chatId];
@@ -163,10 +219,7 @@ bot.on('message', async (ctx) => {
     ctx.reply(rizzResponse, {
       reply_markup: {
         inline_keyboard: [
-          [
-            { text: '🔄 Generate Another Rizz', callback_data: 'rizz' },
-            { text: '📋 Copy Rizz', callback_data: 'copy_rizz' },
-          ],
+          [{ text: '🔄 Generate Another Rizz', callback_data: 'rizz' }],
         ],
       },
     });
@@ -179,14 +232,17 @@ bot.on('message', async (ctx) => {
     ctx.reply(pickupLine, {
       reply_markup: {
         inline_keyboard: [
-          [
-            { text: '🔄 Generate Another Pickup Line', callback_data: 'pickup' },
-            { text: '📋 Copy Pickup Line', callback_data: 'copy_pickup' },
-          ],
+          [{ text: '🔄 Generate Another Pickup Line', callback_data: 'pickup' }],
         ],
       },
     });
     sessions[chatId].step = null; // Reset step after generating pickup line
+  }
+  
+  // Handle free chat (random responses)
+  else {
+    const randomResponse = randomResponses[Math.floor(Math.random() * randomResponses.length)];
+    ctx.reply(randomResponse);
   }
 });
 

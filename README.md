@@ -1,84 +1,73 @@
 # Rizz It Up - Telegram Bot
 
-Rizz It Up là một bot Telegram giúp người dùng tạo ra các bio hẹn hò, câu trả lời thú vị (rizz), và các câu tán tỉnh (pickup lines) cho các ứng dụng hẹn hò. Bot sử dụng OpenAI để tạo nội dung dựa trên các yêu cầu của người dùng.
+Rizz It Up is a Telegram bot that helps users create dating bios, witty responses (rizz), and personalized pickup lines for dating apps. The bot uses OpenAI to generate content based on the user's input.
 
-## Tính năng
+## Features
 
-- **Tạo Bio Hẹn Hò**: Bot giúp bạn tạo một bio hấp dẫn và phù hợp với các nền tảng hẹn hò như Tinder, Bumble, và OkCupid.
-- **Tạo Rizz**: Bot cung cấp các câu trả lời thông minh và hài hước cho các tình huống trong các cuộc trò chuyện hẹn hò.
-- **Tạo Pickup Line**: Bot tạo các câu tán tỉnh cá nhân hóa dựa trên thông tin mà người dùng cung cấp.
-- **Tương tác với người dùng**: Người dùng có thể trả lời các câu hỏi theo từng bước và bot sẽ xử lý yêu cầu một cách mượt mà.
+- **Generate Dating Bio**: The bot helps you create an engaging dating bio suitable for platforms like Tinder, Bumble, and OkCupid.
+- **Generate Rizz**: The bot provides witty and humorous replies for dating conversations.
+- **Generate Pickup Line**: The bot creates personalized pickup lines based on the user’s input.
+- **User Interaction**: Users can answer questions step by step, and the bot processes requests smoothly.
 
-## Yêu Cầu
+## Requirements
 
-Để chạy bot này, bạn cần có:
+To run this bot, you'll need:
 
-- Node.js (với phiên bản >= 14)
-- Thư viện `dotenv`, `telegraf`, và `openai` đã được cài đặt
-- Một tài khoản OpenAI và Telegram Bot Token
+- Node.js (version >= 14)
+- `dotenv`, `telegraf`, and `openai` libraries installed
+- An OpenAI account and Telegram Bot Token
 
-## Cài Đặt
+## Installation
 
-1. **Cài đặt Node.js**: Nếu chưa cài đặt Node.js, bạn có thể tải về và cài đặt từ [https://nodejs.org/](https://nodejs.org/).
+1. **Install Node.js**: If you haven't installed Node.js yet, download and install it from [https://nodejs.org/](https://nodejs.org/).
 
-2. **Cài đặt các thư viện cần thiết**:
+2. **Install required libraries**:
 
-    Sau khi đã cài đặt Node.js, bạn cần cài đặt các thư viện phụ thuộc bằng lệnh sau:
+    Once Node.js is installed, you need to install the dependencies using the following command:
     ```bash
     npm install dotenv telegraf openai
     ```
 
-3. **Tạo tệp `.env`**:
+3. **Create a `.env` file**:
 
-    Tạo một tệp `.env` trong thư mục gốc của dự án và thêm các biến môi trường sau:
+    Create a `.env` file in the root directory of the project and add the following environment variables:
 
     ```env
     TELEGRAM_BOT_TOKEN=your-telegram-bot-token
     OPENAI_API_KEY=your-openai-api-key
     ```
 
-    Thay `your-telegram-bot-token` và `your-openai-api-key` bằng các thông tin thực tế của bạn.
+    Replace `your-telegram-bot-token` and `your-openai-api-key` with your actual tokens.
 
-4. **Chạy Bot**:
+4. **Run the Bot**:
 
-    Sau khi hoàn tất cài đặt, bạn có thể chạy bot bằng lệnh sau:
+    After installation, run the bot using the following command:
     ```bash
     node bot.js
     ```
 
-## Cách sử dụng
+## Usage
 
-1. **Khởi động bot**: Gửi lệnh `/start` để bắt đầu sử dụng bot. Bot sẽ hiển thị menu chính với các lựa chọn:
-   - **Tạo Bio**: Tạo bio cho ứng dụng hẹn hò.
-   - **Tạo Rizz**: Tạo câu trả lời hài hước cho một tình huống trong cuộc trò chuyện.
-   - **Tạo Pickup Line**: Tạo câu tán tỉnh cá nhân hóa.
+1. **Start the bot**: Send the `/start` command to begin using the bot. The bot will display the main menu with the following options:
+   - **Generate Bio**: Create a bio for your dating profile.
+   - **Generate Rizz**: Generate a witty response for a dating situation.
+   - **Generate Pickup Line**: Generate a personalized pickup line.
 
-2. **Tạo Bio**: Khi chọn "Tạo Bio", bot sẽ hỏi bạn về nền tảng bạn đang sử dụng (Tinder, Bumble, OkCupid, etc.) và các thông tin như tính cách, sở thích, kiểu quan hệ bạn tìm kiếm.
+2. **Generate Bio**: When you choose "Generate Bio", the bot will ask you for information like the platform you’re using (Tinder, Bumble, OkCupid, etc.), personality traits, hobbies, and the type of relationship you're looking for.
 
-3. **Tạo Rizz**: Khi chọn "Tạo Rizz", bot sẽ yêu cầu bạn nhập một tình huống hoặc câu bạn muốn trả lời, và nó sẽ tạo ra một câu trả lời hài hước.
+3. **Generate Rizz**: When you choose "Generate Rizz", the bot will prompt you for a context or message you want to respond to, and it will create a witty reply.
 
-4. **Tạo Pickup Line**: Chọn "Tạo Pickup Line", bot sẽ yêu cầu bạn cung cấp một số thông tin về người mà bạn muốn gửi câu tán tỉnh, và nó sẽ tạo ra một câu tán tỉnh phù hợp.
+4. **Generate Pickup Line**: When you choose "Generate Pickup Line", the bot will ask you for some details about the person you're interested in, and it will generate a personalized pickup line.
 
-## Cấu trúc Dự án
-/project-root
-├── index.js # Mã nguồn chính của bot
-├── .env # Các biến môi trường (Telegram Bot Token, OpenAI API Key)
-├── package.json # Thông tin dự án và các gói phụ thuộc
-├── README.md # Tài liệu hướng dẫn sử dụng dự án
+## Upcoming Features
 
-## Các Tính Năng Đang Phát Triển
+- **Bio tone options**: Provide options for the tone of the bio (Humorous, Friendly, Romantic, etc.).
+- **User data storage**: Store users' generated bios, rizz responses, and pickup lines for future reference.
 
-- **Tùy chọn tone cho Bio**: Cung cấp các lựa chọn cho tone của bio (Hài hước, Thân thiện, Lãng mạn, etc.).
-- **Lưu trữ dữ liệu người dùng**: Lưu trữ các câu trả lời, pickup lines, và bio của người dùng vào cơ sở dữ liệu để tham khảo lại.
+## Contributing
 
-## Tham Gia Dự Án
+If you would like to contribute to the project, feel free to create a pull request or open an issue to discuss ideas.
 
-Nếu bạn muốn đóng góp vào dự án, vui lòng tạo một pull request hoặc mở issue để thảo luận.
+## License
 
-## Giấy phép
-
-Dự án này được phát hành theo giấy phép MIT.
-
----
-
-Cảm ơn bạn đã sử dụng **Rizz It Up**! 🎉
+This project is licensed under the MIT License.
